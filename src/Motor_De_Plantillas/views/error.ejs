@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<%- include ('head') %>
+<body>
+    <%- include ('header') %>
+    <main>
+    <section class="h-75 d-flex align-items-center">
+        <article class="container alert alert-danger my-5 p-5 w-50 h-75" role="alert">
+            <h4 class="alert-heading"><%= title %></h4>
+            <p><%= message %></p>
+            <hr>
+            <p class="p-3 text-center"><%= suggestSolution %></p>
+            <div class="d-flex justify-content-center">
+                <img src="error.png" class="w-25" alt="error">
+            </div>
+            <hr>
+        </article>
+    </section>
+</main>
+    <%- include ('footer') %>
+</body>    
+</html>

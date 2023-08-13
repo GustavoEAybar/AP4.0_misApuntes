@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description" content="practicando el manejos de plantillas">
-    <meta name="keywords" content="ejs, node js, express, nodemon">
-    <meta name="author" content="Gustavo Exequiel Aybar">
-
-    <link rel="icon" href="icono.png" type="image/png">
-    <title>El motor de plantillas Ejs</title>
-</head>
+<%- include('head')%>
 <body>
-    <header>
-
-    </header>
+    <%- include ('header')%>
     <main>
-        <h1><%= title %></h1>
-        <p><%= message %></p>
-        <ul>
-            <% for(let i=0; i < products.length; i++) { %>
-                <li><%= products[i].name %></li>
-                <% } %>
-        </ul>
-            
+        <section class="h-75 d-flex flex-column justify-content-center">
+            <article class="container pt-5 text-center">
+                <h1>Lista de Productos</h1>
+            </article>
+            <article class="container my-5 p-3 w-50 border border-5 rounded-3">
+                <table class="table table-dark table-striped table-hover mb-0">
+                    <thead>
+                        <tr class="border">
+                            <th class="py-4 text-center border">Nombre</th>
+                            <th class="py-4 text-center">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i=0; i < products.length; i++) { %>
+                            <tr>
+                                <td class="py-3 text-center border-end"><%= products[i].name %></td>
+                                <td class="py-3 text-center"><%= products[i].price %></td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </article>
+        </section>
     </main>
-    <footer>
-        <hr>
-        <p>&copy; Derechos Reservados - Copyrigth 2023 - Aybar, Gustavo Exequiel</p>
-    </footer>
+    <%- include ('footer')%>
 </body>
 </html>
