@@ -21,5 +21,18 @@ app.get('/cursos/:categoria', (req, res) => {
 });
 
 app.get('/cursos', (req, res) => {
-    
-})
+    let respuesta = [];
+    for (let curso of cursos){
+        if(
+            curso.nombre.toLowerCase() === req.query.nombre.toLowerCase() && 
+            curso.categoria.toLowerCase() === req.query.categoria.toLowerCase()
+        ){
+            respuesta.push(curso);
+        }
+    }
+    respuesta.length === 0 ? res.json(cursos) : res.json(respuesta);
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto local ${PORT}`);
+});
