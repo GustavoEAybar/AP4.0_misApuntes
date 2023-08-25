@@ -1,27 +1,77 @@
-const productos = [
-    {id:1, nombre:"Notebook 14 fhd", importe: 115000, categoria:"Portatil"},
-    {id:2, nombre:"Tablet Pad 9,7", importe: 195000, categoria:"Tablet"},
-    {id:3, nombre:"Macbook Air", importe: 745000, categoria:"Portatil"},
-    {id:4, nombre:"Tablet Droid 10.1", importe: 165000, categoria:"Tablet"},
-    {id:5, nombre:"Smartwatch 1.8 black", importe: 22500, categoria:"Reloj"},
-    {id:6, nombre:"Smartwatch 2 red", importe: 24200, categoria:"Reloj"},
-];
+const express = require("express");
+const cursos = require("./cursos.js");
+const app = express();
+const PORT = 3000;
 
-productos.forEach(producto => {
-    console.table(producto);
+app.get("/", (req, res) => {
+  res.send("Bienvenidos al servidor web con sutas dinámicas");
+  console.log(cursos);
 });
 
-const resultado = productos.find(producto => producto.id === 5)
-if (resultado !== undefined){
-    console.table(resultado);
-}else{
-    console.log(`No hay productos con el ID 5`);
-}
+app.get("/cursos/:categoria", (req, res) => {
+  let parametro = req.params.categoria.trim().toLowerCase();
+  let resultado = [];
+  if (parametro) {
+    resultado = cursos.filter(
+      (curso) => curso.categoria.toLowerCase() === parametro
+    );
+  }
+  resultado.length > 0
+    ? res.json(resultado)
+    : res.json([
+        { id: "Error", descripcion: "No se encontraron coincidencias" },
+      ]);
+});
 
-const resultado2 = productos.filter (producto2 => producto2.categoria === 'Tablet');
-resultado2 !== [] ? console.table(resultado2)
-: console.log(`No hay categorias similares a Tablet`)
+app.get("/cursos", (req, res) => {
+  const queryParams = Object.keys(req.query);
+  let resultado = [];
+  if (queryParams.length) {
+    console.log("llegan los parámetros");
+    resultado = cursos.filter(
+      (curso) =>
+        curso.nombre.toLowerCase().includes(req.query.nombre.toLowerCase()) &&
+        curso.vategoria
+          .toLowerCase()
+          .includes(req.query.categoria.toLowerCase())
+    );
+    if (resultado.length > 0) {
+      res.json(resultado);
+    } else {
+      console.log("No llegan prámetros. Envío el set de datos");
+      res.json({ id: "Error", descripcion: "no se recibieron parametros." });
+    }
+  }
+});
 
-const resultado3 = productos.filter(producto3 => producto3.nombre.includes('book'));
-resultado3 !== [] ? console.table(resultado3)
-    :  console.log(`No hay categorias similares a Tablet`)
+app.get("/curso/codigo/:id", (req, res) => {
+  const codigo = parseInt(req.params.id);
+  let resultado = [];
+  if (typeof codigo === "number") {
+    resultado = cursos.filter((curso) => curso.id === codigo);
+  }
+  resultado.length > 0
+    ? resultado.json(resultado)
+    : res.json([
+        { id: "Error", descipcion: " No se encontraron coicidencias." },
+      ]);
+});
+
+app.get("/curso/nombre/:nombre", (req, res) => {
+  const nombre = req.params.nombre.toLowerCase();
+  let resultado = [];
+  if (nombre) {
+    resultado = cursos.filter((curso) =>
+      curso.nombre.toLowerCase().includes(nombre)
+    );
+  }
+  resultado.length > 0
+    ? res.json(resultado)
+    : res.json([
+        { id: "Error", descipcion: " No se encontraron coicidencias." },
+      ]);
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto local ${PORT}`);
+});
