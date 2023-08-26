@@ -31,9 +31,7 @@ app.get("/cursos", (req, res) => {
     resultado = cursos.filter(
       (curso) =>
         curso.nombre.toLowerCase().includes(req.query.nombre.toLowerCase()) &&
-        curso.vategoria
-          .toLowerCase()
-          .includes(req.query.categoria.toLowerCase())
+        curso.categoria.toLowerCase().includes(req.query.categoria.toLowerCase())
     );
     if (resultado.length > 0) {
       res.json(resultado);
@@ -44,20 +42,20 @@ app.get("/cursos", (req, res) => {
   }
 });
 
-app.get("/curso/codigo/:id", (req, res) => {
+app.get("/cursos/codigo/:id", (req, res) => {
   const codigo = parseInt(req.params.id);
   let resultado = [];
   if (typeof codigo === "number") {
     resultado = cursos.filter((curso) => curso.id === codigo);
   }
   resultado.length > 0
-    ? resultado.json(resultado)
+    ? res.json(resultado)
     : res.json([
         { id: "Error", descipcion: " No se encontraron coicidencias." },
       ]);
 });
 
-app.get("/curso/nombre/:nombre", (req, res) => {
+app.get("/cursos/nombre/:nombre", (req, res) => {
   const nombre = req.params.nombre.toLowerCase();
   let resultado = [];
   if (nombre) {
