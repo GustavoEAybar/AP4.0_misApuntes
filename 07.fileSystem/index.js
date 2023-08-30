@@ -1,53 +1,44 @@
-const fs = require("fs");
+const express = require ("express");
+const app = express();
+const PORT = 3000;
+const fs = require ("fs");
 
-const crearArchivo = (nombreDelArchivo) => {
-  let existe = fs.existsSync(nombreDelArchivo);
-  if (!existe) {
-    fs.writeFile(
-      nombreDelArchivo,
-      "otro Archivo Creado con FS",
-      (error) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log("El archivo se creo correctamente");
-        }
-      }
-    );
-  }
-  console.log("El Archivo ya existe");
-};
-
-crearArchivo("primerArchivo.txt");
-
-fs.readFile('primerArchivo.txt', 'utf8', (err, data) => {
-    if(err){
-        console.log("Error: " + err);
-    }else{
-        console.log(data);
+app.get("/productos", (req, res) => {
+  fs.readFile("products.json","utf-8",(error, data) => {
+    if (error) {
+      res.json({ error: error})
+      return
     }
-});
+    res.json(JSON.parse(data))
+  })
+})
 
-fs.appendFile("otroArchivo.txt", " contenido Agregado", (error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Se agrego el contenido correctamente");
-  }
-});
-
-fs.unlink('otroArchivo.txt', (error) => {
+app.get("/productos/id/:id", (req, res) => {
+  let idProductoConsultado = parseInt(req.params.id)
+  fs.readFile("products.json","utf-8",(error, data) => {
     if(error) {
-        console.error(error);
-    }else {
-        console.log('El archivo se elimino correctamente')
+      res.json({ error: error })
+      return
     }
-});
+    let productos =JSON.parse(data)
+    let respuesta = prodctos.find((producto) => producto.id === idProductoConsultado)
+    respuesta ? res.json(respuesta) : res.json({error: `No existen conincidencias para el id ${idProductoConsultado}`})
+  })
+})
 
-fs.unlink('primerArchivo.txt', (error) => {
-    if(error) {
-        console.error(error);
-    }else {
-        console.log('El archivo se elimino correctamente')
+app.get("/productos/nombre/:nombre", (req,res)=>{
+  let nombreProductoConsultado=req.params.nombre.toLowerCase()
+  fs.readFile("products.json","utf-8", (error, data) => {
+    if(error){
+      res.json({error: error})
+      return
     }
-});
+    let productos =JSON.parse(data);
+    let respuesta =productos.filter(elemento => elemento.nombre.toLowerCase().Includes(nombreProductoConsultado)); 
+    respuesta.length ? res.json(respuesta) : res.json({error: `No existen conincidencias para el producto ${nombreProductoConsultado}`})
+  })
+})
+
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`)
+})
