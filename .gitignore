@@ -7,3 +7,4 @@ package.json
 /css/bootstrap.min.css
 css
 /js/bootstrap.min.js
+.env
